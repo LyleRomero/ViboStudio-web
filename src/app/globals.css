@@ -1,0 +1,318 @@
+@import "tailwindcss";
+
+/* ============================================================
+   VIBO STUDIO / THE DIGITAL ISSUE
+   Tokens lifted verbatim from the printed brochure (ISSUE 001).
+   ============================================================ */
+
+@theme {
+  --color-ink: #151515;
+  --color-paper: #f4f1ea;
+  --color-acid: #d4f542;
+  --color-graphite: #555555;
+
+  /* Secondary tones, derived from the brochure's printed pages. */
+  --color-ink-line: #3d3d39;
+  --color-ink-text: #c9c6be;
+  --color-paper-line: #c9c5bb;
+  --color-paper-text: #4a4a44;
+
+  --font-display: var(--font-anton), "Arial Narrow", sans-serif;
+  --font-text: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  * {
+    min-width: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Clears the fixed masthead when jumping to a chapter anchor. */
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-text);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-acid);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  /* ---------- editorial page shell ---------- */
+  .shell {
+    width: 100%;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4.2vw, 5rem);
+  }
+
+  /* ---------- cover wordmark ----------
+     The VIBO glyphs are sized against their own container so the wordmark
+     always spans the full measure, then capped so a short viewport still fits
+     the whole cover without scrolling. */
+  .cover-wordmark {
+    container-type: inline-size;
+    display: block;
+    /* On a wide, short screen the measure is capped by height instead of by
+       width, so the wordmark still fills whatever box it is given and the
+       rest of the cover keeps its room. 1.648 is the compressed advance. */
+    width: min(100%, 80vh);
+  }
+
+  .cover-wordmark-size {
+    font-size: calc(100cqw / 1.648);
+  }
+
+  /* ---------- typography ---------- */
+  .disp {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 0.9;
+    letter-spacing: 0.002em;
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-size: clamp(0.625rem, 0.72vw, 0.75rem);
+    line-height: 1.45;
+  }
+
+  /* Acid highlight, the brochure's <mark> treatment. */
+  .mk {
+    display: inline-block;
+    background: var(--color-acid);
+    color: var(--color-ink);
+    padding-inline: 0.12em;
+    margin-inline: -0.12em;
+    line-height: 0.96;
+  }
+
+  .chip {
+    display: inline-block;
+    background: var(--color-acid);
+    color: var(--color-ink);
+    padding: 0.35em 0.7em 0.25em;
+  }
+
+  /* On an acid page the chip inverts so it stays a chip. */
+  .on-acid .chip,
+  .on-acid .mk {
+    background: var(--color-ink);
+    color: var(--color-acid);
+  }
+
+  /* ---------- hairlines ---------- */
+  .rule {
+    border: 0;
+    border-top: 1px solid var(--color-paper-line);
+  }
+
+  .on-ink .rule {
+    border-top-color: var(--color-ink-line);
+  }
+
+  /* ---------- chapter surfaces ---------- */
+  .on-ink {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  .on-acid {
+    background: var(--color-acid);
+    color: var(--color-ink);
+  }
+
+  /* ---------- editorial link ---------- */
+  .ed-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding-bottom: 0.15em;
+  }
+
+  .ed-link::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(1);
+    transform-origin: right;
+    transition: transform 0.45s var(--ease-editorial);
+  }
+
+  .ed-link:hover::after,
+  .ed-link:focus-visible::after {
+    transform: scaleX(0);
+  }
+
+  /* ---------- buttons ---------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9em;
+    white-space: nowrap;
+    border: 1px solid currentColor;
+    padding: 1rem 1.6rem;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: clamp(0.6875rem, 0.78vw, 0.8125rem);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    transition:
+      background-color 0.35s var(--ease-editorial),
+      color 0.35s var(--ease-editorial),
+      transform 0.12s ease-out;
+  }
+
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  /* Solid ink button on paper surfaces. */
+  .btn-ink {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    border-color: var(--color-ink);
+  }
+
+  .btn-ink:hover,
+  .btn-ink:focus-visible {
+    background: var(--color-acid);
+    color: var(--color-ink);
+    border-color: var(--color-acid);
+  }
+
+  /* Acid button on ink surfaces. */
+  .btn-acid {
+    background: var(--color-acid);
+    color: var(--color-ink);
+    border-color: var(--color-acid);
+  }
+
+  .btn-acid:hover,
+  .btn-acid:focus-visible {
+    background: transparent;
+    color: var(--color-acid);
+  }
+
+  /* Outline button: ink rule on paper, flipping to a solid fill on hover. */
+  .btn-line {
+    background: transparent;
+  }
+
+  .btn-line:hover,
+  .btn-line:focus-visible {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  .on-ink .btn-line:hover,
+  .on-ink .btn-line:focus-visible,
+  .on-acid .btn-line:hover,
+  .on-acid .btn-line:focus-visible {
+    background: var(--color-ink);
+    color: var(--color-acid);
+    border-color: var(--color-ink);
+  }
+
+  /* Compact variant for the masthead. */
+  .btn-sm {
+    padding: 0.75rem 1.15rem;
+  }
+
+  /* ---------- form fields ---------- */
+  .field {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+    padding: 0.7rem 0 0.6rem;
+    font-family: var(--font-text);
+    font-size: 1rem;
+    color: inherit;
+    transition: border-color 0.3s var(--ease-editorial);
+  }
+
+  .field::placeholder {
+    color: color-mix(in srgb, currentColor 55%, transparent);
+  }
+
+  .field:focus {
+    outline: none;
+    border-bottom-color: currentColor;
+  }
+
+  .field:focus-visible {
+    outline: none;
+  }
+
+  select.field {
+    appearance: none;
+    border-radius: 0;
+  }
+
+  /* ---------- touch drawer ----------
+     Opens with a grid-row transition so there is no height measuring in JS. */
+  .service-drawer {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s var(--ease-editorial);
+  }
+
+  .service-drawer.is-open {
+    grid-template-rows: 1fr;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-drawer {
+      transition: none;
+    }
+  }
+
+  /* ---------- device mockups ----------
+     Radius 0 is the page-wide rule; physical devices are the documented
+     exception because a phone or a laptop is a real object with real corners. */
+  .device-phone {
+    border-radius: clamp(1.1rem, 2.2vw, 1.75rem);
+  }
+
+  .device-screen-phone {
+    border-radius: clamp(0.7rem, 1.6vw, 1.2rem);
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
